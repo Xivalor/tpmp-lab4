@@ -27,6 +27,10 @@ target_link_libraries(tpmp-lab4 PRIVATE flower_core)
 if(ENABLE_COVERAGE)
     target_compile_options(flower_core PRIVATE -coverage -fprofile-arcs -ftest-coverage)
     target_link_options(flower_core PRIVATE -coverage -fprofile-arcs -ftest-coverage)
+    
+    # Добавить флаги для исполняемого файла
+    target_compile_options(tpmp-lab4 PRIVATE -coverage -fprofile-arcs -ftest-coverage)
+    target_link_options(tpmp-lab4 PRIVATE -coverage -fprofile-arcs -ftest-coverage)
 endif()
 
 enable_testing()
