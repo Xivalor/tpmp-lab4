@@ -1,8 +1,8 @@
 # 🌸 tpmp-lab4
 
-[![CI Pipeline](https://github.com/ВАШ-ЛОГИН/tpmp-lab4/actions/workflows/ci.yml/badge.svg)](https://github.com/ВАШ-ЛОГИН/tpmp-lab4/actions/workflows/ci.yml)
+[![CI Pipeline]({{ github.server_url }}/{{ github.repository }}/actions/workflows/ci.yml/badge.svg)]({{ github.server_url }}/{{ github.repository }}/actions/workflows/ci.yml)
 
-[![Code Coverage](https://github.com/ВАШ-ЛОГИН/tpmp-lab4/actions/workflows/coverage.yml/badge.svg)](https://github.com/ВАШ-ЛОГИН/tpmp-lab4/actions/workflows/coverage.yml)
+[![Code Coverage]({{ github.server_url }}/{{ github.repository }}/actions/workflows/coverage.yml/badge.svg)]({{ github.server_url }}/{{ github.repository }}/actions/workflows/coverage.yml)
 
 ## 📋 Описание
 
