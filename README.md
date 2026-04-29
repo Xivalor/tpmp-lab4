@@ -1,5 +1,7 @@
 # tpmp-lab4 - Цветочная оранжерея
 
+[Отчет](https://docs.google.com/document/d/1pIygK0BVce_K1gdQNub3DO0s0ci9rS2q7zytiDCnjts/edit?hl=ru&tab=t.0)
+
 [![CI Pipeline](https://github.com/Xivalor/tpmp-lab4/actions/workflows/ci.yml/badge.svg)](https://github.com/Xivalor/tpmp-lab4/actions/workflows/ci.yml)
 
 ## 📋 Описание проекта
@@ -17,42 +19,43 @@
 | gcovr | Альтернативный отчёт | `sudo apt install gcovr` |
 
 ### Полная установка всех зависимостей (Ubuntu/Debian)
-
 ```bash
 sudo apt update
 sudo apt install -y cmake build-essential lcov gcovr g++
+```
 
-Сборка проекта
-bash
-
+### Сборка проекта
+```bash
 git clone https://github.com/Xivalor/tpmp-lab4.git
 cd tpmp-lab4
 mkdir build && cd build
 cmake ..
 make
 ./tpmp-lab4
+```
 
 ### Запуск тестов
 ```bash
-
 cd build
 ctest --output-on-failure --verbose
+```
 
 Ожидаемый результат:
-text
-
+```
 100% tests passed, 0 tests failed out of 3
+```
 
 ### Проверка покрытия кода
 - Способ 1: Автоматический скрипт
-bash
+```bash
 
 cd ~/tpmp-lab4
 chmod +x check_coverage.sh
 ./check_coverage.sh
+```
 
 - Способ 2: Пошагово
-bash
+```bash
 
 # 1. Сборка с флагами покрытия
 rm -rf build-coverage
@@ -79,10 +82,10 @@ genhtml coverage_filtered.info --output-directory coverage_html
 
 # 6. Открыть отчёт в браузере
 firefox coverage_html/index.html
+```
 
-📁 Структура проекта
-text
-
+Структура проекта
+```
 tpmp-lab4/
 ├── src/                # Исходный код
 │   ├── Flower.h/cpp    # Модуль цветов
@@ -99,26 +102,50 @@ tpmp-lab4/
 ├── CMakeLists.txt      # Конфигурация CMake
 ├── Makefile            # Упрощённая сборка
 └── README.md           # Документация
+```
+## API Documentation
 
-📝 API документация
-Модуль FLOWERS (Цветы)
-Функция	Описание	Пример
-create_flower()	Создание цветка	Flower f(1, "Роза", "Красная", 150.0);
-updatePrice()	Обновление цены (≤10%)	f.updatePrice(165.0);
-updateStock()	Изменение количества	f.updateStock(100.0);
-Модуль COMPOSITIONS (Композиции)
-Функция	Описание	Пример
-addFlower()	Добавление цветка	comp.addFlower(1, "Красная", 11);
-removeFlower()	Удаление цветка	comp.removeFlower(1);
-calculateCost()	Расчёт стоимости	comp.calculateCost(flowers);
-Модуль ORDERS (Заказы)
-Функция	Описание	Пример
-create_order()	Создание заказа	Order o(1, "2026-04-20", 1, 2, "Иванов", "+7-xxx", "2026-04-20");
-calculateCost()	Расчёт с наценкой	o.calculateCost(comp, flowers);
-applyUrgencyFee()	Применение наценки	o.applyUrgencyFee();
-⚙️ Устранение возможных ошибок
-Ошибка	Решение
-lcov: command not found	sudo apt install lcov
-genhtml: command not found	sudo apt install lcov
-mismatch warnings	Нормально, можно игнорировать
-unexecuted block warnings	Нормально, можно игнорировать
+### Flower Class
+
+| Method | Parameters | Return | Description |
+|--------|------------|--------|-------------|
+| `Flower()` | `id: int, name: string, variety: string, cost: double` | - | Constructor |
+| `updatePrice()` | `newPrice: double` | `bool` | Updates price, returns false if >10% increase |
+| `updateStock()` | `amount: double` | `bool` | Updates stock amount |
+| `toString()` | - | `string` | Returns formatted string |
+
+### Composition Class
+
+| Method | Parameters | Return | Description |
+|--------|------------|--------|-------------|
+| `addFlower()` | `flowerId: int, variety: string, quantity: int` | `bool` | Adds flower to composition |
+| `removeFlower()` | `flowerId: int` | `bool` | Removes flower from composition |
+| `calculateCost()` | `flowers: vector<Flower>&` | `double` | Calculates total cost |
+
+### Order Class
+
+| Method | Parameters | Return | Description |
+|--------|------------|--------|-------------|
+| `create_order()` | `id, orderDate, compId, quantity, customerName, phone, completionDate` | `Order*` | Creates new order |
+| `calculateCost()` | `comp: Composition&, flowers: vector<Flower>&` | `double` | Calculates cost with urgency fee |
+| `applyUrgencyFee()` | - | `double` | Applies 25% (1 day) or 15% (2 days) fee |
+
+### Urgency Fee Rules
+
+| Completion Time | Fee |
+|----------------|-----|
+| Same day (≤1 day) | 25% |
+| Next day (2 days) | 15% |
+| 3+ days | 0% |
+
+## Troubleshooting & Common Errors
+
+| Error / Warning | Cause | Solution |
+|-----------------|-------|----------|
+| `lcov: command not found` | lcov not installed | `sudo apt install lcov` |
+| `genhtml: command not found` | lcov missing | `sudo apt install lcov` |
+| `mismatched end line` | Version mismatch between gcc and lcov | **Safe to ignore** |
+| `unexecuted block` | Optimization flags | **Safe to ignore** |
+| `gcov: version mismatch` | Different gcc version | `sudo apt install gcc-13 g++-13` |
+| `CMake Error: No known features for CXX` | Missing C++ compiler | `sudo apt install g++` |
+| `LNK2038: mismatch detected for 'RuntimeLibrary'` | Windows static/dynamic mismatch | Use Ubuntu for coverage |
