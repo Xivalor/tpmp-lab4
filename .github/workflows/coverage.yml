@@ -1,0 +1,72 @@
+name: Code Coverage Report
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential lcov gcovr
+    
+    - name: Configure with coverage flags
+      run: |
+        mkdir -p build-coverage
+        cd build-coverage
+        cmake .. -DCMAKE_BUILD_TYPE=Debug \
+                 -DCMAKE_C_FLAGS="-coverage -fprofile-arcs -ftest-coverage -O0" \
+                 -DENABLE_COVERAGE=ON
+    
+    - name: Build
+      run: |
+        cd build-coverage
+        make -j$(nproc)
+    
+    - name: Run tests
+      run: |
+        cd build-coverage
+        ctest --output-on-failure --verbose
+    
+    - name: Generate coverage report with lcov
+      run: |
+        cd build-coverage
+        lcov --capture --directory . --output-file coverage.info
+        lcov --remove coverage.info '/usr/*' '*/googletest/*' '*/tests/*' \
+             --output-file coverage_filtered.info
+        lcov --list coverage_filtered.info
+    
+    - name: Generate HTML report
+      run: |
+        cd build-coverage
+        genhtml coverage_filtered.info --output-directory coverage_html
+    
+    - name: Upload to Coveralls
+      uses: coverallsapp/github-action@v2
+      with:
+        file: build-coverage/coverage_filtered.info
+        format: lcov
+    
+    - name: Upload HTML report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-html-report
+        path: build-coverage/coverage_html/
+    
+    - name: Check coverage threshold
+      run: |
+        cd build-coverage
+        COVERAGE=$(lcov --summary coverage_filtered.info 2>&1 | grep "lines" | awk '{print $4}' | sed 's/%//')
+        echo "Total coverage: $COVERAGE%"
+        if (( $(echo "$COVERAGE < 70" | bc -l) )); then
+          echo "Coverage $COVERAGE% is below 70% threshold"
+          exit 1
+        fi

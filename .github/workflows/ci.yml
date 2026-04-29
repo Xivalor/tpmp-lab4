@@ -1,0 +1,82 @@
+name: CI Pipeline for tpmp-gr11a-lab4-meowmeowmeow
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  BUILD_TYPE: Debug
+
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential lcov gcovr
+    
+    - name: Configure CMake
+      run: |
+        mkdir -p build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+    
+    - name: Build
+      run: |
+        cd build
+        make -j$(nproc)
+    
+    - name: Run tests
+      run: |
+        cd build
+        ctest --output-on-failure -C ${{env.BUILD_TYPE}}
+  
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Configure CMake
+      run: |
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+    
+    - name: Build
+      run: |
+        cd build
+        cmake --build . --config ${{env.BUILD_TYPE}}
+    
+    - name: Run tests
+      run: |
+        cd build
+        ctest --output-on-failure -C ${{env.BUILD_TYPE}}
+  
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: brew install cmake
+    
+    - name: Configure CMake
+      run: |
+        mkdir -p build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+    
+    - name: Build
+      run: |
+        cd build
+        make -j$(sysctl -n hw.ncpu)
+    
+    - name: Run tests
+      run: |
+        cd build
+        ctest --output-on-failure -C ${{env.BUILD_TYPE}}
