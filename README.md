@@ -1,8 +1,8 @@
 # 🌸 tpmp-lab4
 
-[![CI Pipeline]({{ github.server_url }}/{{ github.repository }}/actions/workflows/ci.yml/badge.svg)]({{ github.server_url }}/{{ github.repository }}/actions/workflows/ci.yml)
+[![CI Pipeline](https://github.com/Xivalor/tpmp-lab4/actions/workflows/ci.yml/badge.svg)](https://github.com/Xivalor/tpmp-lab4/actions/workflows/ci.yml)
 
-[![Code Coverage]({{ github.server_url }}/{{ github.repository }}/actions/workflows/coverage.yml/badge.svg)]({{ github.server_url }}/{{ github.repository }}/actions/workflows/coverage.yml)
+[![Code Coverage](https://github.com/Xivalor/tpmp-lab4/actions/workflows/coverage.yml/badge.svg)](https://github.com/Xivalor/tpmp-lab4/actions/workflows/coverage.yml)
 
 ## 📋 Описание
 
