@@ -2,9 +2,9 @@ name: CI Pipeline for tpmp-gr11a-lab4-meowmeowmeow
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ '**' ]
   pull_request:
-    branches: [ main ]
+    branches: [ '**' ]
 
 env:
   BUILD_TYPE: Debug
