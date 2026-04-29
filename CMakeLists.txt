@@ -24,6 +24,11 @@ target_include_directories(flower_core PUBLIC src)
 add_executable(tpmp-lab4 src/main.cpp)
 target_link_libraries(tpmp-lab4 PRIVATE flower_core)
 
+if(WIN32)
+    add_compile_options(/MDd)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MDd")
+endif()
+
 if(ENABLE_COVERAGE)
     target_compile_options(flower_core PRIVATE -coverage -fprofile-arcs -ftest-coverage)
     target_link_options(flower_core PRIVATE -coverage -fprofile-arcs -ftest-coverage)
