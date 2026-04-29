@@ -2,7 +2,7 @@
 
 [Отчет](https://docs.google.com/document/d/1pIygK0BVce_K1gdQNub3DO0s0ci9rS2q7zytiDCnjts/edit?hl=ru&tab=t.0)
 
-[![CI Pipeline](https://github.com/Xivalor/tpmp-lab4/actions/workflows/ci.yml/badge.svg)](https://github.com/Xivalor/tpmp-lab4/actions/workflows/ci.yml)
+[![CI Pipeline](https://github.com/Xivalor/tpmp-lab4/actions/workflows/ci.yml/badge.svg)](https://github.com/Xivalor/tpmp-lab4/actions/workflows/ci.yml)  
 [![Code Coverage](https://github.com/Xivalor/tpmp-lab4/actions/workflows/coverage.yml/badge.svg)](https://github.com/Xivalor/tpmp-lab4/actions/workflows/coverage.yml)
 
 ## 📋 Описание проекта
