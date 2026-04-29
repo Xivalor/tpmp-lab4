@@ -1,4 +1,4 @@
-name: CI Pipeline for tpmp-gr11a-lab4-meowmeowmeow
+name: CI Pipeline for tpmp-lab4
 
 on:
   push:

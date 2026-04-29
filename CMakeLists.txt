@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(tpmp-gr11a-lab4-meowmeowmeow LANGUAGES CXX)
+project(tpmp-lab4 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -21,8 +21,8 @@ set(HEADERS
 add_library(flower_core STATIC ${SOURCES} ${HEADERS})
 target_include_directories(flower_core PUBLIC src)
 
-add_executable(tpmp-gr11a-lab4-meowmeowmeow src/main.cpp)
-target_link_libraries(tpmp-gr11a-lab4-meowmeowmeow PRIVATE flower_core)
+add_executable(tpmp-lab4 src/main.cpp)
+target_link_libraries(tpmp-lab4 PRIVATE flower_core)
 
 if(ENABLE_COVERAGE)
     target_compile_options(flower_core PRIVATE -coverage -fprofile-arcs -ftest-coverage)
