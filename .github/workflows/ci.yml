@@ -34,8 +34,8 @@ jobs:
     - name: Run tests
       run: |
         cd build
-        touch greenhouse.db
-        ct  est --output-on-failure -C ${{env.BUILD_TYPE}}
+        touch greenhouse
+        ctest --output-on-failure -C ${{env.BUILD_TYPE}}
   
   build-windows:
     runs-on: windows-latest
