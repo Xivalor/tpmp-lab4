@@ -17,7 +17,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake build-essential lcov gcovr g++
+          sudo apt-get install -y cmake build-essential lcov gcovr g++ libsqlite3-dev
       
       - name: Configure with coverage
         run: |
@@ -35,6 +35,7 @@ jobs:
       - name: Run tests
         run: |
           cd build-coverage
+          touch greenhouse
           ctest --output-on-failure --verbose
       
       - name: Generate coverage report

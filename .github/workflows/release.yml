@@ -17,11 +17,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Install SQLite3 (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libsqlite3-dev
+
+      - name: Install SQLite3 (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install sqlite3
+
+      - name: Install SQLite3 (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          vcpkg install sqlite3:x64-windows
+
       - name: Configure CMake
         run: |
           mkdir -p build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows
+          elif [ "${{ runner.os }}" = "macOS" ]; then
+            cmake .. -DCMAKE_BUILD_TYPE=Release -DSQLite3_INCLUDE_DIR=/opt/homebrew/opt/sqlite/include -DSQLite3_LIBRARY=/opt/homebrew/opt/sqlite/lib/libsqlite3.dylib
+          else
+            cmake .. -DCMAKE_BUILD_TYPE=Release
+          fi
+        shell: bash
       
       - name: Build
         run: |
@@ -32,12 +55,12 @@ jobs:
         if: runner.os != 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: tpmp-lab4-${{ matrix.os }}
-          path: build/tpmp-lab4
-      
+          name: greenhouse-app-${{ matrix.os }}
+          path: bin/greenhouse_app
+
       - name: Upload artifacts (Windows)
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: tpmp-lab4-${{ matrix.os }}
-          path: build/Release/tpmp-lab4.exe
+          name: greenhouse-app-${{ matrix.os }}
+          path: bin/Release/greenhouse_app.exe

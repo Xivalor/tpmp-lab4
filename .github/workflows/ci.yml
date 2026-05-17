@@ -18,7 +18,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake build-essential lcov gcovr
+        sudo apt-get install -y cmake build-essential lcov gcovr libsqlite3-dev
     
     - name: Configure CMake
       run: |
@@ -34,18 +34,23 @@ jobs:
     - name: Run tests
       run: |
         cd build
-        ctest --output-on-failure -C ${{env.BUILD_TYPE}}
+        touch greenhouse.db
+        ct  est --output-on-failure -C ${{env.BUILD_TYPE}}
   
   build-windows:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
     
+    - name: Install SQLite3 via vcpkg
+      run: |
+        vcpkg install sqlite3:x64-windows
+    
     - name: Configure CMake
       run: |
         mkdir build
         cd build
-        cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows
     
     - name: Build
       run: |
@@ -55,6 +60,7 @@ jobs:
     - name: Run tests
       run: |
         cd build
+        echo $null >> greenhouse.db
         ctest --output-on-failure -C ${{env.BUILD_TYPE}}
   
   build-macos:
@@ -63,13 +69,14 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Install dependencies
-      run: brew install cmake
+      run: |
+        brew install cmake sqlite3
     
     - name: Configure CMake
       run: |
         mkdir -p build
         cd build
-        cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSQLite3_INCLUDE_DIR=/opt/homebrew/opt/sqlite/include -DSQLite3_LIBRARY=/opt/homebrew/opt/sqlite/lib/libsqlite3.dylib
     
     - name: Build
       run: |
@@ -79,4 +86,5 @@ jobs:
     - name: Run tests
       run: |
         cd build
+        touch greenhouse.db
         ctest --output-on-failure -C ${{env.BUILD_TYPE}}
