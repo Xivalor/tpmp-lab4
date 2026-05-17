@@ -1,42 +1,52 @@
 cmake_minimum_required(VERSION 3.10)
-project(tpmp-lab4 LANGUAGES CXX)
+project(greenhouse_project LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(ENABLE_COVERAGE "Enable code coverage" OFF)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
+
+find_package(SQLite3 REQUIRED)
+
 set(SOURCES
     src/Flower.cpp
     src/Composition.cpp
     src/Order.cpp
+    src/DatabaseManager.cpp
+    src/AppController.cpp
 )
 
 set(HEADERS
-    src/Flower.h
-    src/Composition.h
-    src/Order.h
+    includes/Flower.h
+    includes/Composition.h
+    includes/Order.h
+    includes/DatabaseManager.h
+    includes/AuthSystem.h
+    includes/AppController.h
 )
 
 add_library(flower_core STATIC ${SOURCES} ${HEADERS})
-target_include_directories(flower_core PUBLIC src)
 
-add_executable(tpmp-lab4 src/main.cpp)
-target_link_libraries(tpmp-lab4 PRIVATE flower_core)
+target_include_directories(flower_core PUBLIC includes)
 
-if(WIN32)
+target_link_libraries(flower_core PUBLIC SQLite::SQLite3)
+
+add_executable(greenhouse_app src/main.cpp)
+
+target_link_libraries(greenhouse_app PRIVATE flower_core)
+
+if(MSVC)
     add_compile_options(/MDd)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MDd")
 endif()
 
 if(ENABLE_COVERAGE)
-    target_compile_options(flower_core PRIVATE -coverage -fprofile-arcs -ftest-coverage)
-    target_link_options(flower_core PRIVATE -coverage -fprofile-arcs -ftest-coverage)
-    
-    # Добавить флаги для исполняемого файла
-    target_compile_options(tpmp-lab4 PRIVATE -coverage -fprofile-arcs -ftest-coverage)
-    target_link_options(tpmp-lab4 PRIVATE -coverage -fprofile-arcs -ftest-coverage)
-endif()
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        target_compile_options(flower_core PRIVATE --coverage -fprofile-arcs -ftest-coverage)
+        target_link_options(flower_core PRIVATE --coverage)
 
-enable_testing()
-add_subdirectory(tests)
+        target_compile_options(greenhouse_app PRIVATE --coverage -fprofile-arcs -ftest-coverage)
+        target_link_options(greenhouse_app PRIVATE --coverage)
+    endif()
+endif()

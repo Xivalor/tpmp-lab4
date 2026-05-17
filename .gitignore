@@ -31,3 +31,4 @@ coverage_html/
 Thumbs.db
 EOF
 
+bin/
