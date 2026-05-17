@@ -50,3 +50,6 @@ if(ENABLE_COVERAGE)
         target_link_options(greenhouse_app PRIVATE --coverage)
     endif()
 endif()
+
+enable_testing()
+add_subdirectory(tests)
